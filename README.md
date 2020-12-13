@@ -1,4 +1,4 @@
-# web-waterfull
+# web-page
 
 > A Vue.js project
 
