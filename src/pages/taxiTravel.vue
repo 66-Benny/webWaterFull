@@ -8,8 +8,15 @@
       start-placeholder="开始日期"
       end-placeholder="结束日期"
       clearable
-      style="margin-bottom: 20px">
+      align="center"
+      style="margin-bottom:20px"
+      v-if="!isMobile">
     </el-date-picker>
+    <inlineCalendar v-if="isMobile"
+      mode="during"
+      style="margin-bottom:20px"
+      @change="onChange"
+      class="mobileDate" />
     <el-button type="success"
       @click="onSubmit">生成数据</el-button>
     <el-button type="primary"
@@ -20,19 +27,27 @@
 
 <script>
 import moment from "moment";
-
 export default {
   name: "taxiTravel",
   data() {
     return {
-      value: "",
+      value: [],
       rangeValue: [],
       randomHours: "",
       randomMinutes: "",
       randomKm: "",
     };
   },
+  mounted() {},
   methods: {
+    onChange(date) {
+      if (date.length === 2) {
+        this.value = [
+          moment(date[0].$d).valueOf(),
+          moment(date[1].$d).valueOf(),
+        ];
+      }
+    },
     onSubmit() {
       if (!this.value) {
         return;
@@ -86,6 +101,12 @@ export default {
       const reg = new RegExp(",", "g");
       return this.rangeValue.toString().replace(reg, "\n");
     },
+    isMobile() {
+      let flag = /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i.test(
+        navigator.userAgent
+      );
+      return flag;
+    },
   },
   watch: {
     value(val) {
@@ -106,5 +127,10 @@ export default {
   left: 50%;
   top: 40%;
   transform: translate(-50%, -40%);
+}
+.mobileDate {
+  width: 150%;
+  position: relative;
+  left: -25%;
 }
 </style>
