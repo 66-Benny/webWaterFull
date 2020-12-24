@@ -12,10 +12,12 @@
       style="margin-bottom:20px"
       v-if="!isMobile">
     </el-date-picker>
-    <inlineCalendar v-if="isMobile"
+    <inlineCalendar ref="myCalendar"
+      v-if="isMobile"
       mode="during"
       style="margin-bottom:20px"
       @change="onChange"
+      enableTouch
       class="mobileDate" />
     <el-button type="success"
       @click="onSubmit">生成数据</el-button>
@@ -88,11 +90,12 @@ export default {
           type: "success",
           message: "数据已复制到剪贴板, 日期初始化完成!",
         });
-        this.value = "";
+        this.value = [];
         this.rangeValue = [];
         this.randomHours = "";
         this.randomMinutes = "";
         this.randomKm = "";
+        this.$refs.myCalendar.init();
       });
     },
   },
