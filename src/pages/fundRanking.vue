@@ -131,6 +131,8 @@ export default {
         });
     },
     onClickSearch() {
+      this.fundNames = [];
+      this.tableData = [];
       this.index = 0;
       this.searchFundInfo.pageSize = this.form.pageSize;
       this.fundArray = this.fundArray.splice(0, this.form.fundArrayNum);
@@ -230,7 +232,6 @@ export default {
           params.offsetY,
         ])[0];
         this.getFundInfo(xIndex);
-        this.getFundName(xIndex);
       }
     },
     getFundInfo(index) {
@@ -241,13 +242,14 @@ export default {
         )
         .then((res) => {
           if (res.data.code === 200) {
-            this.tableData.push(res.data.data);
+            this.$set(this.tableData, index, res.data.data);
+            this.getFundName(index);
           }
         });
     },
     getFundName(index) {
       const clickFundCodeIs = this.fundCountArray.xAxisData[index];
-      const fundName = [];
+      let fundName = [];
       this.fundArray.forEach((item) => {
         item.fundCode.forEach((item2) => {
           if (item2.code === clickFundCodeIs) {
@@ -255,8 +257,23 @@ export default {
           }
         });
       });
-      this.tableData.push({"fundName": fundName})
-      this.fundNames = fundName;
+      fundName.forEach((item, index) => {
+        item === "z" ? (fundName[index] = "近一周") : "";
+        item === "1y" ? (fundName[index] = "近一月") : "";
+        item === "3y" ? (fundName[index] = "近三月") : "";
+        item === "6y" ? (fundName[index] = "近半年") : "";
+      });
+      this.$set(
+        this.tableData,
+        index,
+        Object.assign(this.tableData[index], {
+          fundName: fundName.toString(),
+          index,
+        })
+      );
+      // this.tableData[index] = Object.assign(this.tableData[index], {
+      //   fundName: fundName.toString(),
+      // });
     },
   },
   computed: {},
@@ -265,7 +282,7 @@ export default {
 </script>
 
 <style scoped>
-.box-card{
+.box-card {
   margin-bottom: 25px;
 }
 /* .fundRanking {
