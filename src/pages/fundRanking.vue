@@ -255,7 +255,7 @@ export default {
           }
         });
       });
-      this.colums.fundName = fundName;
+      this.tableData.push({"fundName": fundName})
       this.fundNames = fundName;
     },
   },
