@@ -28,7 +28,7 @@
       <el-row :gutter="20">
         <el-col :span="24">
           <div id="main"
-            style="max-width:1500px;height:600px"
+            style="max-width:1600px;height:400px"
             @click="onEchartClick"></div>
         </el-col>
       </el-row>
@@ -131,6 +131,8 @@ export default {
         });
     },
     onClickSearch() {
+      let myChart = echarts.init(document.getElementById("main"));
+      myChart.setOption({});
       this.fundNames = [];
       this.tableData = [];
       this.index = 0;
