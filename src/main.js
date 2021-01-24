@@ -8,11 +8,17 @@ import 'element-ui/lib/theme-chalk/index.css'
 import moment from 'moment'
 import VueClipboard from "vue-clipboard2";
 import Calendar from 'vue-mobile-calendar'
+import _ from 'lodash'
+import echarts from "echarts";
+import axios from 'axios';
 
 Vue.use(ElementUI, { moment })
 Vue.use(VueClipboard)
-Vue.config.productionTip = false
 Vue.use(Calendar)
+Vue.prototype._ = _
+Vue.prototype.$echarts = echarts;
+Vue.prototype.$axios = axios
+Vue.config.productionTip = false
 
 new Vue({
   el: '#app',
