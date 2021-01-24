@@ -136,8 +136,26 @@ export default {
       this.fundNames = [];
       this.tableData = [];
       this.index = 0;
+      this.searchFundInfo.sort = "z";
       this.searchFundInfo.pageSize = this.form.pageSize;
-      this.fundArray = this.fundArray.splice(0, this.form.fundArrayNum);
+      this.fundArray = [
+        {
+          name: "z",
+          fundCode: [],
+        },
+        {
+          name: "1y",
+          fundCode: [],
+        },
+        {
+          name: "3y",
+          fundCode: [],
+        },
+        {
+          name: "6y",
+          fundCode: [],
+        },
+      ].splice(0, this.form.fundArrayNum);
       this.init();
     },
     mergeFund() {
