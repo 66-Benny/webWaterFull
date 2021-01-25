@@ -19,7 +19,8 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary"
-              @click="onClickSearch">查询</el-button>
+              @click="onClickSearch"
+              v-loading="searchLoading">查询</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -96,6 +97,7 @@ export default {
       tableData: [],
       fundScopeSum: [],
       colums: colums.colums,
+      searchLoading: false,
     };
   },
   mounted() {
@@ -108,6 +110,7 @@ export default {
       } else {
         this.mergeFund();
         this.drawChart();
+        this.searchLoading = false;
       }
     },
     // 获取基金排行数据
@@ -134,6 +137,7 @@ export default {
     },
     // 点击查询，查询对应数据
     onClickSearch() {
+      this.searchLoading = true;
       let myChart = echarts.init(document.getElementById("main"));
       myChart.setOption({});
       this.fundNames = [];
@@ -296,7 +300,7 @@ export default {
           }
         });
     },
-    // 基金周期排行汉化
+    // 基金周期排行汉化及计算基金排名得分
     getFundName(index) {
       const clickFundCodeIs = this.fundCountArray.xAxisData[index];
       let fundName = [];
