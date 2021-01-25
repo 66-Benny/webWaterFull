@@ -14,24 +14,29 @@ const colums = [
       label: '上榜周期'
     },
     {
+      prop: 'scope',
+      label: '分数',
+      width: '60',
+    },
+    {
       prop: 'dayGrowth',
-      label: '单位净值日涨幅(%)'
+      label: '净值日涨幅(%)'
     },
     {
       prop: 'lastWeekGrowth',
-      label: '单位净值周涨幅(%)'
+      label: '净值周涨幅(%)'
     },
     {
       prop: 'lastMonthGrowth',
-      label: '单位净值月涨幅(%)'
+      label: '净值月涨幅(%)'
     },
     {
       prop: 'lastThreeMonthsGrowth',
-      label: '单位净值三月涨幅(%)'
+      label: '净值三月涨幅(%)'
     },
     {
       prop: 'lastSixMonthsGrowth',
-      label: '单位净值六月涨幅(%)'
+      label: '净值六月涨幅(%)'
     },
     {
       prop: 'buyRate',

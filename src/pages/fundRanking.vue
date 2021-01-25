@@ -43,7 +43,7 @@
                 :key="index"
                 :prop="colum.prop"
                 :label="colum.label"
-                :width="colum.width || 165"
+                :width="colum.width || 155"
                 align="center">
               </el-table-column>
             </el-table>
@@ -94,6 +94,7 @@ export default {
       index: 0,
       fundNames: [],
       tableData: [],
+      fundScopeSum: [],
       colums: colums.colums,
     };
   },
@@ -109,6 +110,7 @@ export default {
         this.drawChart();
       }
     },
+    // 获取基金排行数据
     getFundData() {
       this.$axios
         .post("https://api.doctorxiong.club/v1/fund/rank", this.searchFundInfo)
@@ -130,6 +132,7 @@ export default {
           }
         });
     },
+    // 点击查询，查询对应数据
     onClickSearch() {
       let myChart = echarts.init(document.getElementById("main"));
       myChart.setOption({});
@@ -158,13 +161,22 @@ export default {
       ].splice(0, this.form.fundArrayNum);
       this.init();
     },
+    // 合并多个周期的排行数据，并插入到 X 轴与 Y 轴中
     mergeFund() {
       const mergeArr = [];
+      let fundScope = [];
       this.fundArray.forEach((element) => {
-        element.fundCode.forEach((item) => {
+        element.fundCode.forEach((item, index) => {
           mergeArr.push(item.code);
+          if (item.code) {
+            fundScope.push({
+              fundCode: item.code,
+              scope: this.searchFundInfo.pageSize - index,
+            });
+          }
         });
       });
+      this.fundScopeSum = this.sameFundCodeSum(fundScope);
       this.mergeFundCodeArray = _.flattenDeep(mergeArr);
       this.fundCount = this.mergeFundCodeArray.reduce(function (
         allNames,
@@ -187,6 +199,21 @@ export default {
       this.fundCountArray.xAxisData = xData;
       this.fundCountArray.yAxisData = yData;
     },
+    // 整合基金排名分数，将 fundCode 相同的值的得分累加
+    sameFundCodeSum(arr) {
+      const result = arr.reduce((obj, item) => {
+        if (!obj[item.fundCode]) {
+          obj[item.fundCode] = 0;
+        }
+        obj[item.fundCode] += item.scope;
+        return obj;
+      }, {});
+      return Object.keys(result).map((key) => ({
+        fundCode: key,
+        scope: result[key],
+      }));
+    },
+    // 生成 Echart
     drawChart() {
       let myChart = echarts.init(document.getElementById("main"));
       //堆叠折线图所需参数对象
@@ -243,6 +270,7 @@ export default {
       };
       myChart.setOption(option);
     },
+    // 点击 Echart 柱状图，获取 xIndex
     onEchartClick(params) {
       let myChart = echarts.init(document.getElementById("main"));
       let pointInPixel = [params.offsetX, params.offsetY];
@@ -254,6 +282,7 @@ export default {
         this.getFundInfo(xIndex);
       }
     },
+    // 获取基金详情
     getFundInfo(index) {
       const clickFundCodeIs = this.fundCountArray.xAxisData[index];
       this.$axios
@@ -267,6 +296,7 @@ export default {
           }
         });
     },
+    // 基金周期排行汉化
     getFundName(index) {
       const clickFundCodeIs = this.fundCountArray.xAxisData[index];
       let fundName = [];
@@ -283,17 +313,23 @@ export default {
         item === "3y" ? (fundName[index] = "近三月") : "";
         item === "6y" ? (fundName[index] = "近半年") : "";
       });
+      let scope = 0;
+      this.fundScopeSum.forEach((item) => {
+        if (item.fundCode === clickFundCodeIs) {
+          scope = Math.floor(
+            (item.scope / this.mergeFundCodeArray.length) * 100
+          );
+        }
+      });
       this.$set(
         this.tableData,
         index,
         Object.assign(this.tableData[index], {
           fundName: fundName.toString(),
           index,
+          scope,
         })
       );
-      // this.tableData[index] = Object.assign(this.tableData[index], {
-      //   fundName: fundName.toString(),
-      // });
     },
   },
   computed: {},
