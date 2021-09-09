@@ -1,54 +1,49 @@
 <template>
   <div class="taxiTravel">
     <el-form
-      :inline="true"
       :model="formInline"
       class="demo-form-inline"
     >
-      <el-row :gutter="30">
-        <el-col :span="6">
-          <el-form-item label="时开始">
+      <el-row :gutter="20">
+        <el-col :md="6">
+          <el-form-item label="小时开始">
             <el-input-number
               size="small"
               clearable
               v-model="formInline.hoursStart"
-              placeholder="时开始"
             ></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
-          <el-form-item label="时结束">
+        <el-col :md="6">
+          <el-form-item label="小时结束">
             <el-input-number
               size="small"
               clearable
               v-model="formInline.hoursEnd"
-              placeholder="时结束"
             ></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
-          <el-form-item label="分开始">
+        <el-col :md="6">
+          <el-form-item label="分钟开始">
             <el-input-number
               size="small"
               clearable
               v-model="formInline.minutesStart"
-              placeholder="分开时"
             ></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
-          <el-form-item label="分结束">
+        <el-col :md="6">
+          <el-form-item label="分钟结束">
             <el-input-number
               size="small"
               clearable
               v-model="formInline.minutesEnd"
-              placeholder="分结束"
             ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="6">
+        <el-col :md="6">
           <el-form-item label="公里开始">
             <el-input-number
               size="small"
@@ -58,7 +53,7 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :md="6">
           <el-form-item label="公里结束">
             <el-input-number
               size="small"
@@ -68,8 +63,11 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="日期范围">
+        <el-col :md="12">
+          <el-form-item
+            label="日期范围"
+            v-show="!isMobile"
+          >
             <el-date-picker
               v-model="formInline.value"
               type="daterange"
@@ -81,21 +79,22 @@
               clearable
               align="center"
               style="margin-bottom:20px"
-              v-show="!isMobile"
               size="small"
             >
             </el-date-picker>
-            <inlineCalendar
-              ref="myCalendar"
-              v-show="isMobile"
-              mode="during"
-              style="margin-bottom:20px"
-              @change="onChange"
-              enableTouch
-              class="mobileDate"
-            />
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
+        <inlineCalendar
+          ref="myCalendar"
+          v-show="isMobile"
+          mode="during"
+          style="margin-bottom:20px"
+          @change="onChange"
+          enableTouch
+          class="mobileDate"
+        />
       </el-row>
       <el-form-item>
         <el-button
@@ -227,7 +226,7 @@ export default {
   transform: translate(-50%, -40%);
 }
 .setTime {
-  margin-bottom: 80px;
+  margin-bottom: 60px;
 }
 .mobileDate {
   width: 150%;
