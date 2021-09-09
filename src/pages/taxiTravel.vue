@@ -1,29 +1,109 @@
 <template>
   <div class="taxiTravel">
-    <el-date-picker v-model="value"
-      type="daterange"
-      format="yyyy 年 MM 月 dd 日"
-      value-format="timestamp"
-      range-separator="至"
-      start-placeholder="开始日期"
-      end-placeholder="结束日期"
-      clearable
-      align="center"
-      style="margin-bottom:20px"
-      v-if="!isMobile">
-    </el-date-picker>
-    <inlineCalendar ref="myCalendar"
-      v-if="isMobile"
-      mode="during"
-      style="margin-bottom:20px"
-      @change="onChange"
-      enableTouch
-      class="mobileDate" />
-    <el-button type="success"
-      @click="onSubmit">生成数据</el-button>
-    <el-button type="primary"
-      v-clipboard:copy="copyRangeValue"
-      v-clipboard:success="onCopy">复制数据</el-button>
+    <el-form
+      :inline="true"
+      :model="formInline"
+      class="demo-form-inline"
+    >
+      <el-row :gutter="30">
+        <el-col :span="6">
+          <el-form-item label="时开始">
+            <el-input-number
+              size="small"
+              clearable
+              v-model="formInline.hoursStart"
+              placeholder="时开始"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="时结束">
+            <el-input-number
+              size="small"
+              clearable
+              v-model="formInline.hoursEnd"
+              placeholder="时结束"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="分开始">
+            <el-input-number
+              size="small"
+              clearable
+              v-model="formInline.minutesStart"
+              placeholder="分开时"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="分结束">
+            <el-input-number
+              size="small"
+              clearable
+              v-model="formInline.minutesEnd"
+              placeholder="分结束"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-form-item label="公里开始">
+            <el-input-number
+              size="small"
+              clearable
+              v-model="formInline.kmStart"
+              placeholder="公里开始"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="公里结束">
+            <el-input-number
+              size="small"
+              clearable
+              v-model="formInline.kmEnd"
+              placeholder="公里结束"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="日期范围">
+            <el-date-picker
+              v-model="formInline.value"
+              type="daterange"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="timestamp"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              clearable
+              align="center"
+              style="margin-bottom:20px"
+              v-show="!isMobile"
+              size="small"
+            >
+            </el-date-picker>
+            <inlineCalendar
+              ref="myCalendar"
+              v-show="isMobile"
+              mode="during"
+              style="margin-bottom:20px"
+              @change="onChange"
+              enableTouch
+              class="mobileDate"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-form-item>
+        <el-button
+          type="success"
+          @click="onSubmit"
+        >确定</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -31,80 +111,95 @@
 import moment from "moment";
 export default {
   name: "taxiTravel",
-  data() {
+  data () {
     return {
-      value: [],
-      rangeValue: [],
-      randomHours: "",
-      randomMinutes: "",
-      randomKm: "",
+      formInline: {
+        value: [],
+        rangeValue: [],
+        randomHours: "",
+        randomMinutes: "",
+        randomKm: "",
+        hoursStart: 21,
+        hoursEnd: 21,
+        minutesStart: 0,
+        minutesEnd: 59,
+        kmStart: 34,
+        kmEnd: 35
+      }
     };
   },
-  mounted() {},
   methods: {
-    onChange(date) {
+    onChange (date) {
       if (date.length === 2) {
-        this.value = [
+        this.formInline.value = [
           moment(date[0].$d).valueOf(),
           moment(date[1].$d).valueOf(),
         ];
       }
     },
-    onSubmit() {
-      if (!this.value) {
+    onSubmit () {
+      if (!this.formInline.value.length) {
+        this.$notify({
+          title: '警告',
+          message: '日期范围为必填项',
+          type: 'error'
+        });
         return;
       }
-      let start = this.value[0] - 1000 * 3600 * 24;
-      let end = this.value[1];
+      let start = this.formInline.value[0] - 1000 * 3600 * 24;
+      let end = this.formInline.value[1];
       let length = (end - start) / (1000 * 3600 * 24);
       for (let index = 0; index < length; index++) {
         let startDate = moment(start).add(1, "days").format("YYYY-MM-DD");
-        this.randomHours = this.randomNum(21, 22, 0);
-        this.randomMinutes = this.randomNum(0, 58, 0);
-        this.randomKm = this.randomNum(34, 35.6, 1);
-        if (this.randomHours === "22") {
-          this.randomMinutes = (this.randomMinutes / 2).toFixed();
+        this.formInline.randomHours = this.randomNum(this.formInline.hoursStart, this.formInline.hoursEnd, 0);
+        this.formInline.randomMinutes = this.randomNum(this.formInline.minutesStart, this.formInline.minutesEnd, 0);
+        this.formInline.randomKm = this.toInteger(this.randomNum(this.formInline.kmStart, this.formInline.kmEnd, 1))
+        if (this.formInline.randomHours === this.formInline.hoursEnd) {
+          this.formInline.randomMinutes = (this.formInline.randomMinutes / 4).toFixed();
         }
-        if (this.randomMinutes.length < 2) {
-          this.randomMinutes = "0" + this.randomMinutes;
+        if (this.formInline.randomMinutes < 10) {
+          this.formInline.randomMinutes = "0" + this.formInline.randomMinutes;
         }
-        let startDateTime = `${startDate} ${this.randomHours}:${this.randomMinutes} ${this.randomKm}Km`;
-        this.rangeValue.push(startDateTime);
+        let startDateTime = `${startDate} ${this.formInline.randomHours}:${this.formInline.randomMinutes} ${this.formInline.randomKm}Km`;
+        this.formInline.rangeValue.push(startDateTime);
         start = startDate;
-        this.randomHours = "";
-        this.randomMinutes = "";
+        this.formInline.randomHours = "";
+        this.formInline.randomMinutes = "";
       }
-      this.$notify({
-        duration: 3000,
-        type: "success",
-        message: "生成数据成功!",
-      });
+      this.onCopy()
     },
-    randomNum(minNum, maxNum, fixedTo) {
-      return (Math.random() * (maxNum - minNum) + minNum).toFixed(fixedTo);
+    randomNum (minNum, maxNum, fixedTo) {
+      return (Math.random() * (maxNum - minNum) + minNum).toFixed(fixedTo) * 1;
     },
-    onCopy() {
+    toInteger (obj) {
+      if (typeof obj === 'number' && obj % 1 === 0) {
+        return obj + '.0'
+      } else {
+        return obj
+      }
+    },
+    onCopy () {
       this.$copyText(this.copyRangeValue).then(() => {
         this.$notify({
           duration: 3000,
           type: "success",
           message: "数据已复制到剪贴板, 日期初始化完成!",
         });
-        this.value = [];
-        this.rangeValue = [];
-        this.randomHours = "";
-        this.randomMinutes = "";
-        this.randomKm = "";
+        this.formInline.value = [];
+        this.formInline.rangeValue = [];
+        this.formInline.randomHours = "";
+        this.formInline.randomMinutes = "";
+        this.formInline.randomKm = "";
         this.$refs.myCalendar.init();
       });
     },
   },
   computed: {
-    copyRangeValue() {
+    copyRangeValue () {
       const reg = new RegExp(",", "g");
-      return this.rangeValue.toString().replace(reg, "\n");
+      return this.formInline.rangeValue.toString().replace(reg, "\n");
     },
-    isMobile() {
+    isMobile () {
       let flag = /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i.test(
         navigator.userAgent
       );
@@ -112,12 +207,12 @@ export default {
     },
   },
   watch: {
-    value(val) {
+    "formInline.value" (val) {
       if (!val) {
-        this.rangeValue = [];
-        this.randomHours = "";
-        this.randomMinutes = "";
-        this.randomKm = "";
+        this.formInline.rangeValue = [];
+        this.formInline.randomHours = "";
+        this.formInline.randomMinutes = "";
+        this.formInline.randomKm = "";
       }
     },
   },
@@ -130,6 +225,9 @@ export default {
   left: 50%;
   top: 40%;
   transform: translate(-50%, -40%);
+}
+.setTime {
+  margin-bottom: 80px;
 }
 .mobileDate {
   width: 150%;
