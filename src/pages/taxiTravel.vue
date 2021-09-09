@@ -1,11 +1,17 @@
 <template>
-  <div class="taxiTravel">
+  <div
+    class="taxiTravel"
+    :class="isMobile ? 'top' : ''"
+  >
     <el-form
       :model="formInline"
       class="demo-form-inline"
     >
-      <el-row :gutter="20">
-        <el-col :md="6">
+      <el-row :gutter="30">
+        <el-col
+          :xs="12"
+          :md="6"
+        >
           <el-form-item label="小时开始">
             <el-input-number
               size="small"
@@ -14,7 +20,10 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :md="6">
+        <el-col
+          :xs="12"
+          :md="6"
+        >
           <el-form-item label="小时结束">
             <el-input-number
               size="small"
@@ -23,7 +32,10 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :md="6">
+        <el-col
+          :xs="12"
+          :md="6"
+        >
           <el-form-item label="分钟开始">
             <el-input-number
               size="small"
@@ -32,7 +44,10 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :md="6">
+        <el-col
+          :xs="12"
+          :md="6"
+        >
           <el-form-item label="分钟结束">
             <el-input-number
               size="small"
@@ -43,7 +58,10 @@
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :md="6">
+        <el-col
+          :xs="12"
+          :md="6"
+        >
           <el-form-item label="公里开始">
             <el-input-number
               size="small"
@@ -53,7 +71,10 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :md="6">
+        <el-col
+          :xs="12"
+          :md="6"
+        >
           <el-form-item label="公里结束">
             <el-input-number
               size="small"
@@ -227,6 +248,9 @@ export default {
 }
 .setTime {
   margin-bottom: 60px;
+}
+.top {
+  margin-top: 20px;
 }
 .mobileDate {
   width: 150%;
