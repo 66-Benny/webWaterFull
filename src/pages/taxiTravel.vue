@@ -121,7 +121,7 @@
         <el-button
           type="success"
           @click="onSubmit"
-        >确定</el-button>
+        >确定生成</el-button>
       </el-form-item>
     </el-form>
   </div>
