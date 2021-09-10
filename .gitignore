@@ -4,9 +4,11 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 .DS_Store
  node_modules
- dist/
+ dist
+ build
  npm-debug.log
  .vscode/
+ bennyluo.cf:666
 
 # User-specific files
 *.rsuser
