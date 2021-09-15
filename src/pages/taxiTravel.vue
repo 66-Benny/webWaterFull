@@ -12,7 +12,7 @@
           :xs="12"
           :md="6"
         >
-          <el-form-item label="小时开始111">
+          <el-form-item label="小时开始">
             <el-input-number
               size="small"
               clearable
