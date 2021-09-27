@@ -11,6 +11,8 @@ import Calendar from 'vue-mobile-calendar'
 import _ from 'lodash'
 import echarts from "echarts";
 import axios from 'axios';
+import PerfectScrollbar from 'vue2-perfect-scrollbar'
+import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 
 Vue.use(ElementUI, { moment })
 Vue.use(VueClipboard)
@@ -18,6 +20,7 @@ Vue.use(Calendar)
 Vue.prototype._ = _
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$axios = axios
+Vue.use(PerfectScrollbar)
 Vue.config.productionTip = false
 
 new Vue({
