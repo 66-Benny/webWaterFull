@@ -23,7 +23,7 @@
   </div>
 </template>
 <script>
-const ws = new WebSocket('ws://bennyluo.cf:666')
+const ws = new WebSocket('ws://bennyluo.cf:666/webSocketHome')
 export default {
   name: 'webSocketHome',
   data () {
