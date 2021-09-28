@@ -23,7 +23,7 @@
   </div>
 </template>
 <script>
-const ws = new WebSocket('ws://bennyluo.cf:666/webSocketHome')
+const ws = new WebSocket('wss://bennyluo.cf:666/webSocketHome')
 export default {
   name: 'webSocketHome',
   data () {
@@ -62,7 +62,10 @@ export default {
       }))
     },
     handleWsOpen (e) { console.log('handleWsOpen', e); },
-    handleWsClose (e) { console.log('handleWsClose', e); },
+    handleWsClose (e) {
+      console.log('handleWsClose', e);
+      this.handleTextSend();
+    },
     handleWsError (e) { console.log('handleWsError', e); },
     handleWsMessage (e) {
       this.listArr.push(JSON.parse(e.data))
